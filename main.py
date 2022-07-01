@@ -10,73 +10,96 @@
 #
 # --- --- --- --- --- --- --- ---
 
-from modules import Menu
-from modules import ControlScraper
+from lemuvi import menuMain, menuYoutube, menuLetters, menuInsert, menuInsertDIRS, insertError
+
+from lemuvi import Controls
 from time import sleep
 from os import system
+#from lemuvi import Downloadletters
+from lemuvi import DownloadYoutube
 
-#from .modules import Downloadletters
-#from .modules import DownloadMusic
-#from .modules import DownloadVideos
-
-class SearchLetters():
+class Main():
     def __init__(self):
-        self.menu = Menu()
         self.mainMenu()
 
-    def menuletters(self):
-        op = input('> ')
-        if op == "1":
-            system('clear')
-            self.menu.menuInsertLetter()
-            self.control.cShowArtists()
-            input("-Enter-")
-
-        elif op == '2':
-            system('clear')
-            self.menu.menuInsert()
-            self.control.cShowmusic()
-            self.control.cgetletters()
-            system('clear')
-        elif op == '3':
-            print("Opcion 3")
-        elif op == '00':
-            self.mainMenu()
-        else:
-            print("Opcion invalida")
-            sleep(1)
-            system('clear')
+    def error(self, i=True):
+        system('clear')
+        insertError(i)
+        input('\n    -- presiona ENTER para continuar --')
+        system('clear')
 
     def mainMenu(self):
         system('clear')
+        self.control = Controls()
         while True:
-            self.menu.menu()
-            self.control = ControlScraper()
+            menuMain()
             op = input("> ")
+            ### ### ### Download Music ### ### ###
             if op == '1':
                 system('clear')
-                self.menu.menuYoutube()
+                menuYoutube()
                 url = input('> ')
-                DownloadMusic(url)
-                system('clear')
+                if url != '00':
+                    self.control.cdownloads(url)
+                    if self.control.e:
+                        self.error(i=False)
+                else:
+                    menuMain()
+                    system('clear')
+            ### ### ### Download Videos ### ### ###
             elif op == '2':
                 system('clear')
-                self.menu.menuYoutube()
+                menuYoutube('v')
                 url = input('> ')
-                DownloadVideos(url)
-                system('clear')
+                if url != '00':
+                    self.control.cdownloads(url, Music=False)
+                    if self.control.e:
+                        self.error(i=False)
+                else:
+                    menuMain()
+                    system('clear')
+            ### ### ### Menu Letter ### ### ###
             elif op == '3':
                 system('clear')
-                self.menu.menuLetters()
-                self.menuletters()
+                menuLetters()
+                op = input('> ')
+                if op == '1':
+                    system('clear')
+                    menuInsert()
+                    self.control.cShowArtists()
+                    if self.control.e:
+                        self.error()
+                elif op == '2':
+                    system('clear')
+                    menuInsert('a')
+                    self.control.cShowmusic()
+                    self.control.cgetletters()
+                    system('clear')
+                elif op == '3':
+                    menuInsert('c')
+                elif op == '4':
+                    print("Opcion 3")
+                elif op == '0':
+                     print("### Adios ###")
+                     sleep(1)
+                     break
+                elif op == '00':
+                    menuMain()
+                    system('clear')
+                else:
+                    print("Opcion invalida")
+                    sleep(1)
+                    system('clear')
+                    op = '3'
             elif op == '0':
-                print("### Adios ###")
-                sleep(1)
-                break
+                 print("### Adios ###")
+                 sleep(1)
+                 break
             else:
-                print("Opcion invalida")
-                sleep(1)
+                system('clear')
+                insertError()
+                input('\n    -- presiona ENTER para continuar --')
                 system('clear')
 
 
-SearchLetters()
+Main()

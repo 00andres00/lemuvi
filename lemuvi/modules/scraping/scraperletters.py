@@ -1,6 +1,6 @@
 from .parse import BS
 from .getpage import GetPage
-from ..helpers import hcleanHTML
+from lemuvi.helpers.helpCleanHtml import hcleanHTML
 
 class ScraperLetters():
     def __init__(self):
@@ -13,8 +13,7 @@ class ScraperLetters():
         html = request.g.text
         self.bs = BS(html)
 
-    def getlistArtists(self, l):
-        url = "https://www.letras.com/letra/{}/".format(l.upper())
+    def getlistArtists(self, url):
         prop = ['ul','class','cnt-list-thumb-l']
         self.createBS(url)
         self.bs.getData(prop)
